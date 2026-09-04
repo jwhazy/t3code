@@ -95,6 +95,14 @@ export const SETTINGS_SEARCH_ITEMS = [
     searchTerms: ["transparent transparency solid menus dialogs composer"],
   },
   {
+    id: "transparent-sidebar",
+    title: "Transparent sidebar",
+    to: "/settings/appearance",
+    searchTerms: ["glass translucent blur wallpaper desktop"],
+    desktopOnly: true,
+    macOnly: true,
+  },
+  {
     id: "panel-animations",
     title: "Panel animations",
     to: "/settings/appearance",

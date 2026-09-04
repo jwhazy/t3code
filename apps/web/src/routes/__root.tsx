@@ -34,6 +34,7 @@ import {
   toastManager,
 } from "../components/ui/toast";
 import { resolveAndPersistPreferredEditor } from "../editorPreferences";
+import { isMacElectron } from "../env";
 import { applyAppearanceFontVariables } from "~/appearanceFonts";
 import { applyAppearanceContrast } from "~/appearanceContrast";
 import { useClientSettings } from "../hooks/useSettings";
@@ -182,10 +183,20 @@ function ContrastAppearanceSync() {
 
 function GlassAppearanceSync() {
   const glassOpacity = useClientSettings((settings) => settings.glassOpacity);
+  const sidebarTransparencyEnabled = useClientSettings(
+    (settings) => settings.sidebarTransparencyEnabled,
+  );
 
   useEffect(() => {
     document.documentElement.style.setProperty("--glass-opacity", `${glassOpacity}%`);
   }, [glassOpacity]);
+
+  useEffect(() => {
+    document.documentElement.toggleAttribute(
+      "data-desktop-sidebar-transparency",
+      isMacElectron && sidebarTransparencyEnabled,
+    );
+  }, [sidebarTransparencyEnabled]);
 
   return null;
 }

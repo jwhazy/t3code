@@ -55,6 +55,11 @@ The main sidebar, right panel, and terminal drawer open and close immediately by
 The duration can be set up to 400 ms. Clicking the preview replays all three panel transitions; at
 0 ms, it snaps between the same open and closed states.
 
+In the macOS desktop app, turn on **Settings → Appearance → Transparent sidebar** to let the system
+backdrop show through the sidebar. The **Glass opacity** slider controls how strongly the sidebar is
+tinted while its blur remains in place. This option is off by default and is unavailable on Windows,
+Linux, web, or mobile.
+
 ## Environment icons
 
 When you are connected to more than one environment, every thread that lives somewhere other than

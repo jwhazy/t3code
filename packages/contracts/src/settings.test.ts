@@ -137,6 +137,16 @@ describe("ClientSettings glass opacity", () => {
   });
 });
 
+describe("ClientSettings sidebar transparency", () => {
+  it("defaults off and accepts an explicit desktop preference", () => {
+    expect(decodeClientSettings({}).sidebarTransparencyEnabled).toBe(false);
+    expect(
+      decodeClientSettingsPatch({ sidebarTransparencyEnabled: true }).sidebarTransparencyEnabled,
+    ).toBe(true);
+    expect(() => decodeClientSettingsPatch({ sidebarTransparencyEnabled: "yes" })).toThrow();
+  });
+});
+
 describe("ClientSettings appearance contrast", () => {
   it("defaults to the theme's original contrast", () => {
     expect(decodeClientSettings({}).appearanceContrast).toBe(100);

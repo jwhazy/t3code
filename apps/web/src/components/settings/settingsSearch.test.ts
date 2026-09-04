@@ -117,7 +117,13 @@ describe("searchSettings", () => {
 
   it("hides desktop-only settings from browser search", () => {
     expect(SETTINGS_SEARCH_ITEMS.some((item) => item.id === "quit-confirmation")).toBe(true);
+    expect(SETTINGS_SEARCH_ITEMS.find((item) => item.id === "transparent-sidebar")).toMatchObject({
+      desktopOnly: true,
+      macOnly: true,
+      to: "/settings/appearance",
+    });
     expect(searchSettings("hold to quit")).toEqual([]);
+    expect(searchSettings("transparent sidebar")).toEqual([]);
     expect(searchSettings("wsl")).toEqual([]);
   });
 

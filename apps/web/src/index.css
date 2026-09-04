@@ -1348,6 +1348,25 @@ html[data-theme-id="t3-chat"] [data-app-sidebar] {
   }
 }
 
+/* The rail's resize affordance marks the same seam as the app-sidebar edge.
+   A raw sidebar-border token can paint it as a bright 2px divider that reads
+   as a layout gap between the sidebar and the content, so themed sessions
+   share the edge's toned color. The dark half stays a flat rule: nesting a
+   variant under a ::after selector compiles to an unmatchable ::after:is(). */
+html[data-theme-id] [data-app-sidebar] [data-slot="sidebar-rail"]:hover::after {
+  background-color: color-mix(in srgb, var(--contrast-sidebar-foreground) 10%, transparent);
+}
+
+html[data-theme-id] [data-app-sidebar] [data-slot="sidebar-rail"]:is(.dark, .dark *):hover::after {
+  background-color: color-mix(in srgb, var(--contrast-sidebar-foreground) 8%, transparent);
+}
+
+html[data-theme-id="t3-chat"]
+  [data-app-sidebar]
+  [data-slot="sidebar-rail"]:is(.dark, .dark *):hover::after {
+  background-color: var(--contrast-sidebar-border);
+}
+
 /* Contrast stays in ordinary custom properties so both Tailwind utilities and
    global/imperative chrome styles resolve the same adjusted role. Redeclare on
    the sidebar because it owns a local semantic palette. */
@@ -1524,6 +1543,42 @@ body {
   background-image: var(--surface-grain);
   background-repeat: repeat;
   background-size: var(--surface-grain-size);
+}
+
+/* The desktop window owns the backdrop material. Keep the normal renderer
+   fully opaque until the desktop-only preference is enabled, then expose only
+   the sidebar aperture and tint it with the same opacity and blur tokens as
+   the rest of the app's glass surfaces. */
+html[data-desktop-sidebar-transparency],
+html[data-desktop-sidebar-transparency] body {
+  background-color: transparent !important;
+}
+
+html[data-desktop-sidebar-transparency] body {
+  background-image: none;
+}
+
+html[data-desktop-sidebar-transparency] [data-app-sidebar] {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+html[data-desktop-sidebar-transparency] [data-app-sidebar] [data-sidebar="sidebar"] {
+  background-color: color-mix(in srgb, var(--sidebar) var(--glass-opacity), transparent);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    background-color: var(--sidebar);
+  }
+}
+
+html[data-desktop-sidebar-transparency] [data-app-sidebar] [data-slot="sidebar-rail"]:hover {
+  background-color: transparent;
+}
+
+html[data-desktop-sidebar-transparency] [data-app-sidebar] [data-slot="sidebar-rail"]:hover::after {
+  background-color: color-mix(in srgb, var(--contrast-sidebar-foreground) 8%, transparent);
 }
 
 pre,

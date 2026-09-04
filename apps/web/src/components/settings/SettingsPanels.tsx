@@ -59,7 +59,7 @@ import {
   resolveEnvironmentIdentificationPillLabel,
   useEnvironmentStageLabel,
 } from "../SidebarStageBackdrop";
-import { isElectron } from "../../env";
+import { isElectron, isMacElectron } from "../../env";
 import { buildHostedChannelSelectionUrl, type HostedAppChannel } from "../../hostedPairing";
 import { useCustomThemes } from "../../hooks/useCustomThemes";
 import {
@@ -511,6 +511,10 @@ export function useSettingsRestore(onRestored?: () => void) {
         ? ["Contrast"]
         : []),
       ...(settings.glassOpacity !== DEFAULT_UNIFIED_SETTINGS.glassOpacity ? ["Glass opacity"] : []),
+      ...(settings.sidebarTransparencyEnabled !==
+      DEFAULT_UNIFIED_SETTINGS.sidebarTransparencyEnabled
+        ? ["Transparent sidebar"]
+        : []),
       ...(settings.panelAnimationDurationMs !== DEFAULT_UNIFIED_SETTINGS.panelAnimationDurationMs
         ? ["Panel animations"]
         : []),
@@ -627,6 +631,7 @@ export function useSettingsRestore(onRestored?: () => void) {
       settings.fontSizePrompt,
       settings.fontSizeTerminal,
       settings.glassOpacity,
+      settings.sidebarTransparencyEnabled,
       settings.panelAnimationDurationMs,
       settings.enableLegacyTokenStreaming,
       settings.enableProviderUpdateChecks,
@@ -719,6 +724,7 @@ export function useSettingsRestore(onRestored?: () => void) {
       contextWindowMeterEnabled: DEFAULT_UNIFIED_SETTINGS.contextWindowMeterEnabled,
       environmentIdentificationMode: DEFAULT_UNIFIED_SETTINGS.environmentIdentificationMode,
       glassOpacity: DEFAULT_UNIFIED_SETTINGS.glassOpacity,
+      sidebarTransparencyEnabled: DEFAULT_UNIFIED_SETTINGS.sidebarTransparencyEnabled,
       panelAnimationDurationMs: DEFAULT_UNIFIED_SETTINGS.panelAnimationDurationMs,
       sidebarThreadPreviewCount: DEFAULT_UNIFIED_SETTINGS.sidebarThreadPreviewCount,
       sidebarProjectGroupingMode: DEFAULT_UNIFIED_SETTINGS.sidebarProjectGroupingMode,
@@ -1159,7 +1165,7 @@ export function AppearanceSettingsPanel() {
 
         <SettingsRow
           {...searchableSetting("setting-glass-opacity")}
-          description="Higher values make menus, dialogs, and the composer more solid."
+          description="Higher values make menus, dialogs, the composer, and transparent sidebars more solid."
           resetAction={
             settings.glassOpacity !== DEFAULT_UNIFIED_SETTINGS.glassOpacity ? (
               <SettingResetButton
@@ -1202,6 +1208,36 @@ export function AppearanceSettingsPanel() {
             </div>
           }
         />
+
+        {isMacElectron ? (
+          <SettingsRow
+            {...searchableSetting("transparent-sidebar")}
+            description="Let the desktop backdrop show through the sidebar with glass blur."
+            resetAction={
+              settings.sidebarTransparencyEnabled !==
+              DEFAULT_UNIFIED_SETTINGS.sidebarTransparencyEnabled ? (
+                <SettingResetButton
+                  label="transparent sidebar"
+                  onClick={() =>
+                    updateSettings({
+                      sidebarTransparencyEnabled:
+                        DEFAULT_UNIFIED_SETTINGS.sidebarTransparencyEnabled,
+                    })
+                  }
+                />
+              ) : null
+            }
+            control={
+              <Switch
+                aria-label="Transparent sidebar"
+                checked={settings.sidebarTransparencyEnabled}
+                onCheckedChange={(checked) =>
+                  updateSettings({ sidebarTransparencyEnabled: checked })
+                }
+              />
+            }
+          />
+        ) : null}
 
         {showEnvironmentIdentification ? (
           <SettingsRow
